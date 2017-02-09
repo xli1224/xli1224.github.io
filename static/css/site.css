@@ -1,0 +1,45 @@
+body {font-family: serif; font-size: 16px; line-height: 150%;}
+footer {margin: 20px 0 50px 0; text-align: center;}
+h3 {margin: 30px 0 15px 0;}
+pre {margin: 25px 0;}
+pre, pre * {background: #333 !important; font-weight: normal !important;
+	text-decoration: none !important; font-style: normal !important;}
+ul {padding: 5px 0 20px 25px;}
+p {margin-bottom: 20px;}
+blockquote {font-style: italic;}
+.home {list-style-type: none; padding-left: 0; line-height: 140%;
+	white-space: nowrap;}
+.home em {color: #aaa; margin-left: 5px;}
+.title {min-width: 150px; float: left;}
+.date {font-family: monospace; font-size: 13px; color: #777;}
+.arrow {margin: 0 5px;}
+.post-nav {margin: 20px 0; color: #666;}
+.center {text-align: center; display: block; margin: 25px 0;}
+#vimeo {width: 730px; height: 417px; margin: 10px 0;}
+.speakerdeck-iframe {margin: 20px 0 !important;}
+.side-thumb {float:right; width:320px; text-align:center;
+	margin:-20px 0 10px 40px; font-style:italic;}
+.side-thumb img {margin-top:20px;}
+img {max-width: 100%;}
+.container img {margin: 10px;}
+td, tr {padding:10px 5px;}
+th {white-space:nowrap;}
+th em {display:block; font-weight:normal; line-height:20px;}
+th.r, td.r {text-align:right !important; padding-right:40px !important;}
+tr.top th, td.y, td.n {text-align:center;}
+td.y {color:green;}
+td.n {color:red;}
+td a, td em {white-space:nowrap;}
+td p {margin:20px 0;}
+img.steve {float: right; width: 150px; border-radius: 150px;
+	margin: -5px 0 0 40px;}
+@media all and (max-width: 640px) {.home a {display: block; float: none;}}
+
+.col-md-5 {margin-right: 25px;}
+.col-md-7 {width: 50%;}
+
+.intro {margin: 20px 0 0 0;}
+.featured {text-align: center; margin-top: 15px; margin-bottom: 25px;}
+.featured img {height: 150px; margin: 25px auto 0 auto;}
+.featured p {margin: 15px 0;}
+.featured p a {line-height: 30px;}

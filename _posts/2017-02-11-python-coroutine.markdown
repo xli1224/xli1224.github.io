@@ -5,10 +5,9 @@ tags:
 - coroutine
 title: python中的协程
 ---
-# 协程
 在之前的文章中有提到到协程和线程在实现上的主要区别之一在于，线程是由内核进行切换，用户无法控制切换时间，而协程则是由用户自己主动交出控制权。这里的用户不是特指程序员，而是代码本身。
 
-从某种程度来说，协程和生成器（generator）的工作机制很相似，我也无法确定python中的协程是否就是基于生成器来实现的。一个典型的生成器如下：
+协程也许算是python中最难理解的概念之一，要理解协程，你必须得抛弃传统的调用过程，即调用->退出。从某种程度来说，协程和生成器（generator）的工作机制很相似。一个典型的生成器如下：
 
 ```python
 def fabbi(upper_limit):
@@ -44,7 +43,71 @@ print c.send("send to coroutine")
 2. next(c)调用返回"in coroutine"并打印变量
 3. c.send("send to coroutine")，进入coro并且把值赋给recv变量，第二条yield又将此变量返回。也就意味着send不仅接收了变量传入，同时也继续运行生成器，直至yield。
 
-上面的例子已经满足了协程中的自主调度的要求。如果把数据生成，想象成IO请求，生成器在此yield返回。同时有一个更上层的对象，管理着所有资源的状态和所有生成器的调用。一旦某个资源空闲，就切换回该生成器。这个概念是不是很像我们所期望的协程？我们可以试一下：
+上面的例子已经满足了协程中的自主调度的要求。如果把数据生成，想象成IO请求，生成器在此yield返回。同时有一个更上层的对象，管理着所有资源的状态和所有生成器的调用。一旦请求资源空闲，就将其返回给该生成器。这个概念是不是很像我们所期望的协程？
+
+当然我们现在离这个状态还有点远，我在试图写这个例子的时候从youtube上找到了一个极佳的讲解，非常深入简出。这里我就老老实实的将这位的讲解学习一遍。
+
+# Everything starts from Generator (see?...)
+关于使用yield来创建生成器的过程就不在复述了。第一个关键点在于 **调用生成器函数返回一个生成器对象，但是函数本身并没有执行。** 这意味着如果要运行起来到第一个yield，起码要调用一次生成器的next方法。比如下面这个例子：
+
+```python
+def count(n):
+    print "Start counting"
+    while n > 0:
+        yield n
+        n -= 1
+
+c = count(10)
+print c
+c.next()
+for x in c:
+    print x
+```
+
+输出：
+```
+<generator object count at 0x10bcb63c0>
+Start counting
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+```
+
+利用生成器的特性，即产生序列数据，可以做很多有意思的操作，比如pipeline。将一个生成器产生的数据传递给第二个生成器使用，第二个生成器并不需要感知到上一个生成器，只需要将其作为序列数据使用即可。
+
+```python
+import time
+
+def follow(file):
+    file.seek(0,2)
+    while True:
+        line = file.readline()
+        if not line:
+            time.sleep(0.1)
+            continue
+        yield line
+
+def grep(pattern, lines):
+    print ("looking for pattern %s" % pattern)
+    for line in lines:
+        if pattern in line:
+            yield line
+
+
+logfile = open("/tmp/test.log")
+loglines = follow(logfile)
+results = grep("python", loglines)
+
+for line in results:
+    print line
+```
 
 
 

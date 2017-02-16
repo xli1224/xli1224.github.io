@@ -98,7 +98,7 @@ class WithAdoptable(object):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         print "Do something when with ends"
-        
+
 with withAdoptable:
 print "Do something in the middle"
 ```
@@ -117,7 +117,6 @@ Do something when with ends
 ```python
 from contextlib import contextmanager
 import os
-
 
 @contextmanager
 def working_directory(path):

@@ -110,6 +110,53 @@ for line in results:
 ```
 
 
+这里第二个grep方法，是使用了follow产生的序列数据，他们两个本质上还都是生成器。如果让follow把数据传给grep呢？
+
+```python
+import time
+
+def follow(target, file):
+    file.seek(0,2)
+    while True:
+        line = file.readline()
+        if not line:
+            time.sleep(0.1)
+            continue
+        target.send(line)
+
+def grep(pattern):
+    print('looking for pattern %s' % pattern)
+    while True:
+        line = yield 
+        if pattern in line:
+            print line
+              
+logfile = open("/tmp/test.log")
+filter = grep()
+filter.next()
+loglines = follow(logfile, filter)
+
+```
+
+
+使用yield获取数据，这就是协程和生成器的主要区别。
+
+### 使用coroutine装饰器
+不觉得每次用协程的时候就需要先调用一下next来让它进入ready状态很麻烦吗？写个装饰器来解决这个问题吧，调用方法的时候直接给你返回一个准备好的协程。
+
+```python
+import functools
+
+def coroutine(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        cr = func(*args, **kwargs)
+        cr.next()
+        return cr
+    
+    return wrapper
+```
+
 
 # 使用eventlet
 

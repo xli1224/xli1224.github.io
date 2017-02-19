@@ -65,6 +65,7 @@ for x in c:
 ```
 
 输出：
+
 ```
 <generator object count at 0x10bcb63c0>
 Start counting
@@ -110,6 +111,7 @@ for line in results:
 ```
 
 
+## 使用协程消费数据
 这里第二个grep方法，是使用了follow产生的序列数据，他们两个本质上还都是生成器。如果让follow把数据传给grep呢？
 
 ```python
@@ -142,7 +144,7 @@ loglines = follow(logfile, filter)
 使用yield获取数据，这就是协程和生成器的主要区别。
 
 ### 使用coroutine装饰器
-不觉得每次用协程的时候就需要先调用一下next来让它进入ready状态很麻烦吗？写个装饰器来解决这个问题吧，调用方法的时候直接给你返回一个准备好的协程。
+不觉得每次新建一个协程对象的时候就需要先调用一下next来让它进入ready状态很麻烦吗？写个装饰器来解决这个问题吧，调用方法的时候直接给你返回一个准备好的协程。
 
 ```python
 import functools
@@ -156,6 +158,15 @@ def coroutine(func):
     
     return wrapper
 ```
+
+### 关闭协程
+使用close方法，可以使该协程对象退出。
+
+```python
+g = grep(）
+g.close(）
+```
+
 
 
 # 使用eventlet

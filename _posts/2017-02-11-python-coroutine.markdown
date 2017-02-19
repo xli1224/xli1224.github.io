@@ -1,6 +1,6 @@
 ---
 layout: post
-tags: 
+tags:
 - python
 - coroutine
 title: python中的协程
@@ -111,7 +111,7 @@ for line in results:
 ```
 
 
-## 使用协程消费数据
+### 使用协程消费数据
 这里第二个grep方法，是使用了follow产生的序列数据，他们两个本质上还都是生成器。如果让follow把数据传给grep呢？
 
 ```python
@@ -129,10 +129,10 @@ def follow(target, file):
 def grep(pattern):
     print('looking for pattern %s' % pattern)
     while True:
-        line = yield 
+        line = yield
         if pattern in line:
             print line
-              
+
 logfile = open("/tmp/test.log")
 filter = grep()
 filter.next()
@@ -155,7 +155,7 @@ def coroutine(func):
         cr = func(*args, **kwargs)
         cr.next()
         return cr
-    
+
     return wrapper
 ```
 
@@ -163,12 +163,16 @@ def coroutine(func):
 使用close方法，可以使该协程对象退出。
 
 ```python
-g = grep(）
-g.close(）
+g = grep()
+g.close()
 ```
 
+### 由生成器到协程的总结
+1. 生成器负责生成序列数据
+2. 协程消费数据
+3. 两者是不同的概念
+
+# 使用协程做一些更有趣的事情，比如pipeline和数据流控制
 
 
 # 使用eventlet
-
-__init__

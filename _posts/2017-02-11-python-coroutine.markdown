@@ -136,7 +136,7 @@ def grep(pattern):
 logfile = open("/tmp/test.log")
 filter = grep()
 filter.next()
-loglines = follow(logfile, filter)
+follow(logfile, filter)
 
 ```
 
@@ -173,6 +173,8 @@ g.close()
 3. 两者是不同的概念
 
 # 使用协程做一些更有趣的事情，比如pipeline和数据流控制
+协程可以消费数据，它也可以把数据发送给别的协程。对于一个pipeline来说，它当然有起始有结束。起始往往不是一个coroutine，因为没人传数据给它。而结束点则是一个普通的coroutine，它接收数据并处理，也不转发给别人。其它所有的节点都同时接受数据，又会把处理后的数据发送给下一个节点。（像不像WSGI？）
 
+使用生成器也可以做pipeline。
 
 # 使用eventlet

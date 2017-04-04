@@ -175,6 +175,60 @@ g.close()
 # 使用协程做一些更有趣的事情，比如pipeline和数据流控制
 协程可以消费数据，它也可以把数据发送给别的协程。对于一个pipeline来说，它当然有起始有结束。起始往往不是一个coroutine，因为没人传数据给它。而结束点则是一个普通的coroutine，它接收数据并处理，也不转发给别人。其它所有的节点都同时接受数据，又会把处理后的数据发送给下一个节点。（像不像WSGI？）
 
-使用生成器也可以做pipeline。
+使用生成器也可以做pipeline，上面的follow和grep既是一个例子，只是缺乏了中间节点，但本质是一样的。如果我们复写一下grep，让它可以接收一个协程参数，那么它就可以将过滤后的数据传给下一个处理节点。
+
+```python
+def grep(pattern, target):
+    print('looking for pattern %s' % pattern)
+    while True:
+        line = yield
+        if pattern in line:
+            target.send(line)
+```
+
+这种做法类似与OO设计里的handler，但是使用协程有两个优势:
+
+1. 不需要创建类，对象，直接使用函数，更简单。
+2. 性能更好。
+
+
+# 使用coroutine来做event dispatching
+
+使用coroutine来做dispatching与pipeline非常相似，我并没有找到真正的不同点。使用协程来做sax xml parser的事件处理，每个协程可接受一个target，转发消息。
+
+# 使用coroutine来实现并发编程
+
+终于开始进入正题。回到了开篇时的设想：协程与线程和进程是如此的相似，都有自己的运行状态，都可以接收数据，而且协程的看起来还更简单一点，不像线程要通过queue，也不像进程需要通过消息队列。
+
+首先，我们可以把coroutine打包进一个更上层的layer，比如还是叫它线程。
+
+```python
+@coroutine
+def threaded(target):
+    messages = Queue()
+    def run_target():
+        while True:
+            item = messages.get()
+            if item is GeneratorExit:
+                target.close()
+                return
+            else:
+                target.send(item)
+
+    Thread(target=run_target).start()
+    try:
+        while True:
+            item = yield
+            messages.put(item)
+    except GeneratorExit:
+        messages.put(GeneratorExit)
+```
+
+threaded本身就是一个协程，它将收到的数据全部放进queue里。另外会新起一个线程，不停的抓取queue里面的数据并发送给封装的协程。
+
+需要注意的是，因为数据要通过queue来发给协程，而不是直接send进去，导致这个例子比直接用协程慢了很多。
+
+作者还给出了用subprocess来做实现的例子，但是主要的目的是想说明使用coroutine，可以将实现封装在协程内部，外部的调度系统无论是想用线程还是进程都可以。
+
 
 # 使用eventlet

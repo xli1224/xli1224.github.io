@@ -153,3 +153,6 @@ Docker Registry就是一个容器镜像库。做好的容器镜像可以上传�
 1. 检查本地是否有hello-world这个docker镜像。
 2. 从配置的Registry中下载此镜像到本地。
 3. 从镜像创建容器，并运行。
+
+
+test

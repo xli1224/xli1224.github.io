@@ -114,11 +114,11 @@ zuul:
 Zuul 进行服务请求时，实际上是使用 Ribbon 来实现。Ribbon 我们前面说过，它就是为了服务负载均衡的。
 
 后台起两个 user 服务。
-[image:9CC916BC-3FB6-47C6-B73D-EBA49725441A-323-0000122B549F40DF/002DCE4D-FCCF-46B2-AB1F-764E52475790.png]
+![image](/assets/2017-09-09-use-zuul/002DCE4D-FCCF-46B2-AB1F-764E52475790.png)
 
 再通过 Zuul 进行访问，可以看到后台两个服务被轮询调用。
 
-[image:6484A972-B4AE-4A7F-81CC-B96E0C4CCC6F-323-000012ACDD4CCF5B/95F09AC5-934C-4613-937D-BE5D94C53B79.png]
+![image](/assets/2017-09-09-use-zuul/95F09AC5-934C-4613-937D-BE5D94C53B79.png)
 
 
 ### 路由熔断
@@ -198,7 +198,7 @@ public class UserServiceFallback implements ZuulFallbackProvider {
 ```
 
 关闭 user 服务两个实例中的一个，就会发现熔断被触发了。
-[image:FAD9FFBD-7A94-4C16-A521-DB6D6FF01472-323-0000159F7829A0AC/5F928977-7066-4E2B-8916-BFDEB58A063B.png]
+![image](/assets/2017-09-09-use-zuul/5F928977-7066-4E2B-8916-BFDEB58A063B.png)
 
 这里处理的粒度其实跟之前服务调用的 Feign 或者 Hystrix 是不一样的。之前处理的是某个方法，比如 getUsers，而这里处理的是 route。一般来说，一个服务一个 route（不同服务不同 context），一个服务多个方法（CRUD）。所以如果要这么用的话，其实对于一个服务来说，所有的方法都是同一个 fallback 了。如果想要实现细粒度的 fallback，就必须针对服务的方法去做 route。然而：*Zuul 不支持 serviceId + URL 的混合形式*。即无法为某个服务的某个接口做单独的 route。下面这种 route 配置是不生效的：
 

@@ -34,4 +34,4 @@ origin	ssh://xiang@192.168.1.91:50022/opt/gitrepo/withholdings/WithholdingBill (
 
 并且这个方式有个好处就是从 A 库拉取下来的更新，可以直接推送到 B 库去。
 
-![image](/assets/81F1097A-CA7C-49F6-ABE4-877DF26203B9.png)
+![image](/assets/images/81F1097A-CA7C-49F6-ABE4-877DF26203B9.png)

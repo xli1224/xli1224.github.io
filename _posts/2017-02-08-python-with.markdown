@@ -104,8 +104,8 @@ print "Do something in the middle"
 ```
 
 >Do something with calling with
-Do something in the middle
-Do something when with ends
+ o something in the middle
+ o something when with ends
 
 还有一种办法，就是利用contextmanager模块，contextmananger会自动帮被装饰对象加上\_\_enter\_\_和\_\_exit\_\_方法。so上有一个很棒的例子。这个例子其实更精确的说明了流程：
 1. \_\_enter\_\_的时候直接进入了working_directory方法，切换到目标目录

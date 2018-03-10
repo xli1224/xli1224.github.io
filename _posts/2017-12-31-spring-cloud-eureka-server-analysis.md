@@ -25,6 +25,8 @@ public @interface EnableEurekaServer {
 
 默认开启了 EnableDiscoveryClient，并且 Import 了另一个要导入的自动配置，EurekaServerMarkerConfiguration。
 
+
+
 ```java
 @Configuration
 public class EurekaServerMarkerConfiguration {

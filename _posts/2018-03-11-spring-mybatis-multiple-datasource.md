@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> f9a55b93d7ccab99f212b04dbac71c52d0c22c6f
 ---
 layout: post
 title: Mybatis 在 Spring 下使用多数据源
